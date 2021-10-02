@@ -1,12 +1,12 @@
-function postedBy(parent, args, context) {
+function postedBy(parent: any, args: any, context: any) {
   return context.prisma.link.findUnique({ where: { id: parent.id } }).postedBy()
 }
 
-function votes(parent, args, context) {
+function votes(parent: any, args: any, context: any) {
   return context.prisma.link.findUnique({ where: { id: parent.id } }).votes()
 }
 
-module.exports = {
+export default {
   postedBy,
   votes,
 }
