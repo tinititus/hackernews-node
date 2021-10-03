@@ -40,7 +40,7 @@ async function post(parent: any, args: any, context: any, info: any) {
       postedBy: { connect: { id: userId } },
     },
   })
-  context.pubsub.publish('NEW_LINK', newLink)
+  // context.pubsub.publish('NEW_LINK', newLink)
 
   return newLink
 }
@@ -66,9 +66,33 @@ async function vote(parent: any, args: any, context: any, info: any) {
       link: { connect: { id: Number(args.linkId) } },
     },
   })
-  context.pubsub.publish('NEW_VOTE', newVote)
+  // context.pubsub.publish('NEW_VOTE', newVote)
 
   return newVote
+}
+
+async function deletePost(parent: any, args: any, context: any, info: any) {
+  const { userId } = context
+  const post = await context.prisma.link.findUnique({
+    where: {
+      id: Number(args.linkId),
+    },
+    select: {
+      postedById: true,
+    },
+  })
+  if (!Boolean(post) || post.postedById !== userId) {
+    return 'Could not find post for current user'
+  }
+  const deletedPost = await context.prisma.link.delete({
+    where: {
+      id: Number(args.linkId),
+    },
+  })
+  if (!Boolean(deletedPost)) {
+    return 'Could not delete post'
+  }
+  return 'Post was deleted'
 }
 
 export default {
@@ -76,4 +100,5 @@ export default {
   login,
   post,
   vote,
+  deletePost,
 }
