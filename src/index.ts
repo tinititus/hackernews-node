@@ -5,9 +5,8 @@ import express from 'express'
 import { ApolloServer } from 'apollo-server-express'
 import ws from 'ws' // yarn add ws
 import { useServer } from 'graphql-ws/lib/use/ws'
-import pkg from '@prisma/client'
 import { PrismaClient } from '@prisma/client'
-import { createClient, ServerOptions } from 'graphql-ws'
+import { ServerOptions } from 'graphql-ws'
 
 import { getUserId } from './utils'
 import Query from './resolvers/Query'
@@ -145,46 +144,3 @@ async function startServer() {
   })
 }
 startServer()
-
-// import WebSocketLink from './Websocket'
-
-// const link = new WebSocketLink({
-//   url: 'ws://where.is:4000/graphql',
-//   // connectionParams: () => {
-//   //   const session = getSession()
-//   //   if (!session) {
-//   //     return {}
-//   //   }
-//   //   return {
-//   //     Authorization: `Bearer ${session.token}`,
-//   //   }
-//   // },
-// })
-
-// // const { createClient } = require('graphql-ws')
-
-// const client = createClient({
-//   url: 'ws://localhost:4000/graphql',
-// })
-
-// // query
-// async function testQuery() {
-//   const result = await new Promise((resolve, reject) => {
-//     let result: any
-//     client.subscribe(
-//       {
-//         query: '{ info }',
-//       },
-//       {
-//         next: (data) => (result = data),
-//         error: reject,
-//         complete: () => resolve(result),
-//       }
-//     )
-//   })
-
-//   // expect(result).toEqual({ hello: 'This is GraphQL API' })
-//   console.log(result)
-// }
-
-// testQuery()
