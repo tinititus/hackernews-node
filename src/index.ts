@@ -7,6 +7,7 @@ import ws from 'ws' // yarn add ws
 import { useServer } from 'graphql-ws/lib/use/ws'
 import { PrismaClient } from '@prisma/client'
 import { ServerOptions } from 'graphql-ws'
+import { PubSub } from 'graphql-subscriptions'
 
 import { getUserId } from './utils'
 import Query from './resolvers/Query'
@@ -21,71 +22,6 @@ async function* sayHiInLanguages() {
     yield { greetings: hi }
   }
 }
-
-const typeDefs = `
-type Query {
-  info: String!
-  feed(filter: String, skip: Int, take: Int, orderBy: LinkOrderByInput): Feed!
-}
-
-type Mutation {
-  post(url: String!, description: String!): Link!
-  signup(email: String!, password: String!, name: String!): AuthPayload
-  login(email: String!, password: String!): AuthPayload
-  vote(linkId: ID!): Vote
-}
-
-type Link {
-  id: ID!
-  description: String!
-  url: String!
-  postedBy: User
-  createdAt: DateTime!
-  votes: [Vote!]!
-}
-
-type AuthPayload {
-  token: String
-  user: User
-}
-
-type User {
-  id: ID!
-  name: String!
-  email: String!
-  links: [Link!]!
-}
-
-type Subscription {
-  newLink: Link
-  newVote: Vote
-  greetings: String
-}
-
-type Vote {
-  id: ID!
-  link: Link!
-  user: User!
-}
-
-type Feed {
-  links: [Link!]!
-  count: Int!
-}
-
-input LinkOrderByInput {
-  description: Sort
-  url: Sort
-  createdAt: Sort
-}
-
-enum Sort {
-  asc
-  desc
-}
-
-scalar DateTime
-`
 
 const resolvers = {
   Query,
@@ -102,6 +38,7 @@ const resolvers = {
 }
 
 const prisma = new PrismaClient()
+const pubsub = new PubSub()
 
 async function startServer() {
   // create express
@@ -115,6 +52,7 @@ async function startServer() {
       return {
         ...req,
         prisma,
+        pubsub,
         userId: req && req.headers.authorization ? getUserId(req) : null,
       }
     },

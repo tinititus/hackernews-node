@@ -18,13 +18,14 @@ async function feed(parent: any, args: any, context: any, info: any) {
   const count = await context.prisma.link.count({ where })
 
   return {
+    id: 'main-feed',
     links,
     count,
   }
 }
 
 function info() {
-  return 'This is GraphQL API'
+  return 'This is a GraphQL API'
 }
 
 export default {

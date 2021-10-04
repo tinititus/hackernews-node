@@ -4,10 +4,7 @@ async function* newLinkSubscribe(
   context?: any,
   info?: any
 ) {
-  // return context.pubsub.asyncIterator("NEW_LINK")
-  for await (const x of ['NEW_LINK', 'NEW_LINK', 'NEW_LINK']) {
-    yield x
-  }
+  return context.pubsub.asyncIterator('NEW_LINK')
 }
 
 const newLink = {

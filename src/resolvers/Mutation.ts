@@ -40,7 +40,7 @@ async function post(parent: any, args: any, context: any, info: any) {
       postedBy: { connect: { id: userId } },
     },
   })
-  // context.pubsub.publish('NEW_LINK', newLink)
+  context.pubsub.publish('NEW_LINK', newLink)
 
   return newLink
 }
@@ -66,7 +66,7 @@ async function vote(parent: any, args: any, context: any, info: any) {
       link: { connect: { id: Number(args.linkId) } },
     },
   })
-  // context.pubsub.publish('NEW_VOTE', newVote)
+  context.pubsub.publish('NEW_VOTE', newVote)
 
   return newVote
 }
